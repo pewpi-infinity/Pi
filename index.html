@@ -1,40 +1,427 @@
 <!doctype html>
+[core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+[remote "origin"]
+	url = https://github.com/pewpi-infinity/infinity-brain-111.git
+	fetch = +refs/heads/main:refs/remotes/origin/main
+[branch "main"]
+	remote = origin
+	merge = refs/heads/main
+<!-- 🐶 PEWPI SIGN-IN (GLOBAL) -->
+<div id="pewpi-gate">
+  <h1>🐶 pewpi</h1>
+  <input id="pewpi_user" placeholder="Handle">
+  <button onclick="pewpiUnlock()">Enter</button>
+</div>
+<script>
+function pewpiUnlock(){
+  localStorage.setItem("pewpi_user", document.getElementById("pewpi_user").value);
+  document.getElementById("pewpi-gate").style.display="none";
+  document.body.classList.add("pewpi-live");
+}
+if(localStorage.getItem("pewpi_user")){
+  document.addEventListener("DOMContentLoaded",()=>{
+    const g=document.getElementById("pewpi-gate");
+    if(g) g.style.display="none";
+    document.body.classList.add("pewpi-live");
+  });
+}
+</script>
+<style>
+#pewpi-gate{position:fixed;inset:0;background:#0e0e0e;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999}
+#pewpi-gate button{background:#ff69b4;border:0;padding:10px 18px}
+body:not(.pewpi-live)>*:not(#pewpi-gate){filter:blur(6px);pointer-events:none}
+</style>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>Infinity</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    body {
-      margin: 0;
-      background: #0b0b0b;
-      color: #e6e6e6;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-    }
-    .wrap {
-      text-align: center;
-    }
-    h1 {
-      font-size: 3rem;
-      margin: 0;
-    }
-    p {
-      opacity: 0.75;
-      margin-top: 0.5rem;
-    }
-    .dot {
-      color: #00e5ff;
-    }
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>∞ Pi</title>
+<style>
+  :root{--bg:#0b0f14;--fg:#e6f0ff;--mut:#92a6c9;--card:#0f1620;--line:#1b2532;--accent:#7fb0ff}
+  html,body{height:100%} body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.45 system-ui,Segoe UI,Roboto,Helvetica,Arial}
+  .wrap{min-height:100%;display:flex;align-items:center;justify-content:center;padding:24px}
+  .card{width:100%;max-width:920px;background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:0 10px 28px rgba(0,0,0,.3);padding:16px}
+  .title{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+  h1{font-size:18px;margin:0} .pill{font-size:12px;padding:3px 8px;border:1px solid var(--line);border-radius:999px;background:#152031;opacity:.9}
+  .controls{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+  button,input,select{font:inherit}
+  .btn{padding:10px 14px;border-radius:999px;border:1px solid var(--line);background:#152031;color:var(--fg);cursor:pointer}
+  .btn:hover{background:#1a2940}
+  .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .slider{width:200px}
+  .screen{border:1px solid var(--line);border-radius:12px;background:#0e1520;padding:12px;min-height:140px;max-height:260px;overflow:auto}
+  .digits{font-family: ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace; font-size:16px; line-height:1.5;word-wrap:break-word;white-space:pre-wrap}
+  .big{font-size:40px;font-weight:700;color:var(--accent);margin:6px 0 10px}
+  a{color:#8bd3ff;text-decoration:none}
+  .foot{display:flex;justify-content:space-between;align-items:center;margin-top:10px;color:var(--mut);font-size:12px}
+</style>
 </head>
 <body>
-  <div class="wrap">
-    <h1>∞ Infinity<span class="dot">.</span></h1>
-    <p>GitHub Pages online</p>
+<div class="wrap">
+  <div class="card">
+    <div class="title">
+      <h1>∞ Infinity Pi • Singing Digits</h1>
+      <span class="pill">keyless • offline • deploy-ready</span>
+    </div>
+    <div class="controls">
+      <div class="row">
+        <button id="start" class="btn">Start</button>
+        <button id="pause" class="btn" disabled>Pause</button>
+        <button id="reset" class="btn">Reset</button>
+      </div>
+      <div class="row">
+        <label>Tempo <input id="tempo" class="slider" type="range" min="40" max="420" value="180"></label>
+        <span id="bpm" class="pill">180 bpm</span>
+      </div>
+      <div class="row">
+        <!-- MODIFIED: Changed max="100" to max="200" and value="60" to value="100" for louder sound -->
+        <label>Volume <input id="vol" class="slider" type="range" min="0" max="200" value="100"></label>
+        <span id="volv" class="pill">100%</span>
+      </div>
+      <div class="row">
+        <label>Scale
+          <select id="scale" class="btn">
+            <option value="C4">C4 major</option>
+            <option value="A3">A3 minor</option>
+            <option value="C5">C5 major (bright)</option>
+          </select>
+        </label>
+        <label><input id="sing" type="checkbox" checked> Sing digits</label>
+      </div>
+    </div>
+
+    <div class="big" id="big">3</div>
+    <div class="screen">
+      <div class="digits" id="digits">3.</div>
+    </div>
+
+    <div class="foot">
+      <div>Status: <span id="status" class="pill">idle</span></div>
+      <div><a id="dl" href="#" download="infinity-pi.html">Download this page (HTML)</a></div>
+    </div>
   </div>
+</div>
+
+<script>
+function piSpigot(){
+  let q=1n, r=0n, t=1n, k=1n, n=3n, l=3n;
+  return {
+    next(){
+      while (true){
+        if (4n*q + r - t < n * t){
+          const digit = Number(n);
+          const nr = 10n * (r - n * t);
+          n = ((10n * (3n*q + r)) / t) - 10n * n;
+          q = 10n * q;
+          r = nr;
+          return { value: digit, done: false };
+        } else {
+          const nr = (2n*q + r) * l;
+          const nn = (q * (7n * k) + 2n + r * l) / (t * l);
+          q = q * k;
+          t = t * l;
+          l = l + 2n;
+          k = k + 1n;
+          n = nn;
+          r = nr;
+        }
+      }
+    }
+  };
+}
+
+class Singer {
+  constructor(){
+    this.ctx = null; this.master = null;
+    this.enabled = true; this.volume = 1.0; this.setBase("C4");
+  }
+  setBase(code){ const map = { C4:261.63, A3:220.00, C5:523.25 }; this.base = map[code] || 261.63; }
+  ensure(){
+    if (!this.ctx){
+      this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+      // Initialize master gain with current volume (which can now be up to 2.0)
+      this.master = this.ctx.createGain(); this.master.gain.value = this.volume; this.master.connect(this.ctx.destination);
+    }
+  }
+  async resumeIfSuspended(){
+    if (!this.ctx) return;
+    try {
+      if (this.ctx.state === 'suspended') await this.ctx.resume();
+    } catch(e){
+      // resume may fail on some browsers if not called from a user gesture; we'll ignore silently
+      console.warn("AudioContext resume failed:", e);
+    }
+  }
+  setVolume(v){ this.volume = v; if (this.master) this.master.gain.value = v; }
+  freqForDigit(d){
+    const semisMajor = [0,2,4,5,7,9,11,12,14,16];
+    const s = semisMajor[d % 10]; return this.base * Math.pow(2, s/12);
+  }
+  playDigit(d, ms=200){
+    if (!this.enabled) return;
+    this.ensure();
+    // If the context is suspended and playDigit is called not directly from user gesture,
+    // it may not produce sound. That's why start() resumes the context on the button click.
+    const t = this.ctx.currentTime;
+    const osc = this.ctx.createOscillator(); const eg = this.ctx.createGain();
+    osc.type = "sine"; osc.frequency.value = this.freqForDigit(d);
+    eg.gain.setValueAtTime(0, t);
+    eg.gain.linearRampToValueAtTime(0.9, t + 0.01);
+    // Ensure ms isn't too small for ramps:
+    const stopTime = t + Math.max(ms/1000, 0.05);
+    eg.gain.exponentialRampToValueAtTime(0.0001, stopTime);
+    osc.connect(eg).connect(this.master); osc.start(t); osc.stop(stopTime + 0.02);
+  }
+}
+
+const digitsEl = document.getElementById('digits');
+const bigEl = document.getElementById('big');
+const stEl = document.getElementById('status');
+const startBtn = document.getElementById('start');
+const pauseBtn = document.getElementById('pause');
+const resetBtn = document.getElementById('reset');
+const tempo = document.getElementById('tempo');
+const bpm = document.getElementById('bpm');
+const vol = document.getElementById('vol');
+const volv = document.getElementById('volv');
+const scale = document.getElementById('scale');
+const sing = document.getElementById('sing');
+const dl = document.getElementById('dl');
+
+let running=false, paused=false, tick=null, gen=null;
+const singer = new Singer();
+let downloadUrl = null;
+
+function setStatus(s){ stEl.textContent = s; }
+function updateTempo(){ bpm.textContent = tempo.value + " bpm"; if (running && tick){ clearInterval(tick); schedule(); } }
+// The division by 100 handles the new range of 0-200, resulting in a gain of 0.0 to 2.0.
+function updateVol(){ const v = Number(vol.value)/100; volv.textContent = Math.round(v*100)+"%"; singer.setVolume(v); }
+function updateScale(){ singer.setBase(scale.value); }
+function updateSing(){ singer.enabled = sing.checked; }
+function schedule(){ const ms = 60000 / Number(tempo.value); tick = setInterval(step, ms); }
+
+// Important: create/resume AudioContext on the user's Start button click so browsers allow sound.
+async function start(){
+  if (running) return;
+  // ensure context exists and resume if suspended (this is called from a user gesture)
+  singer.ensure();
+  await singer.resumeIfSuspended();
+
+  if (!gen) gen = piSpigot();
+  running=true; paused=false; startBtn.disabled=true; pauseBtn.disabled=false; setStatus("playing");
+  schedule();
+}
+function pause(){ if (!running) return;
+  paused=!paused; if (paused){clearInterval(tick); setStatus("paused"); pauseBtn.textContent="Resume";}
+  else {schedule(); setStatus("playing"); pauseBtn.textContent="Pause";}
+}
+function reset(){ clearInterval(tick); running=false; paused=false; gen=null; digitsEl.textContent="3."; bigEl.textContent="3"; startBtn.disabled=false; pauseBtn.disabled=true; pauseBtn.textContent="Pause"; setStatus("idle"); }
+function step(){ if (!gen) gen = piSpigot(); const nxt = gen.next(); const d = nxt.value; bigEl.textContent = d; digitsEl.textContent += d; singer.playDigit(d, Math.max(120, 60000/Number(tempo.value)*0.9)); const sc = digitsEl.parentElement; sc.scrollTop = sc.scrollHeight; }
+
+// Build a downloadable copy of the current HTML so the app is self-contained/offline.
+function buildDownload(){
+  try {
+    if (downloadUrl) URL.revokeObjectURL(downloadUrl);
+    const html = '<!doctype html>\n' + document.documentElement.outerHTML;
+    const blob = new Blob([html], {type: 'text/html'});
+    downloadUrl = URL.createObjectURL(blob);
+    dl.href = downloadUrl;
+    dl.download = "infinity-pi.html";
+  } catch(e){
+    console.warn("Download build failed:", e);
+    dl.removeAttribute('href');
+  }
+}
+
+startBtn.addEventListener('click', async (ev) => { await start(); buildDownload(); });
+pauseBtn.addEventListener('click', pause);
+resetBtn.addEventListener('click', () => { reset(); buildDownload(); });
+tempo.addEventListener('input', updateTempo);
+vol.addEventListener('input', updateVol);
+scale.addEventListener('change', updateScale);
+sing.addEventListener('change', updateSing);
+
+// build initial download and initial UI states
+updateTempo(); updateVol(); updateScale(); updateSing();
+buildDownload();
+
+// Revoke blob url when page unloads
+window.addEventListener('unload', () => { if (downloadUrl) URL.revokeObjectURL(downloadUrl); });
+
+</script>
 </body>
+<!-- C13B0_CHAT_WIDGET_BEGIN -->
+<style>
+  .c13b0-chatfab{position:fixed;right:18px;bottom:18px;z-index:99999;border-radius:999px;padding:12px 14px;font-weight:700;box-shadow:0 10px 30px rgba(0,0,0,.25);cursor:pointer;user-select:none}
+  .c13b0-chatpanel{position:fixed;right:18px;bottom:72px;width:min(520px,calc(100vw - 36px));height:min(560px,calc(100vh - 120px));z-index:99999;border-radius:18px;overflow:hidden;box-shadow:0 14px 40px rgba(0,0,0,.35);display:none}
+  .c13b0-chathead{padding:10px 12px;font-weight:800;display:flex;align-items:center;justify-content:space-between}
+  .c13b0-chatbody{height:calc(100% - 94px);overflow:auto;padding:10px 12px;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-size:13px}
+  .c13b0-chatline{white-space:pre-wrap;margin:8px 0}
+  .c13b0-chatbar{display:flex;gap:8px;padding:10px 12px;border-top:1px solid rgba(255,255,255,.10)}
+  .c13b0-chatin{flex:1;border-radius:12px;padding:10px 12px;border:1px solid rgba(255,255,255,.12);outline:none}
+  .c13b0-chatbtn{border-radius:12px;padding:10px 12px;font-weight:800;border:0;cursor:pointer}
+</style>
+
+<div id="c13b0_chat_fab" class="c13b0-chatfab">🧱💬🧱 CHAT</div>
+
+<div id="c13b0_chat_panel" class="c13b0-chatpanel" role="dialog" aria-label="C13B0 Chat">
+  <div class="c13b0-chathead">
+    <div>🧱💬🧱 Repo Terminal</div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <small id="c13b0_chat_repo" style="opacity:.8">repo: (auto)</small>
+      <button id="c13b0_chat_close" class="c13b0-chatbtn">✕</button>
+    </div>
+  </div>
+  <div id="c13b0_chat_body" class="c13b0-chatbody"></div>
+  <div class="c13b0-chatbar">
+    <input id="c13b0_chat_in" class="c13b0-chatin" placeholder="Ask this repo... (returns tokenized answer)" />
+    <button id="c13b0_chat_send" class="c13b0-chatbtn">SEND</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  // Theme: tries to inherit page colors; keeps your design intact.
+  const fab = document.getElementById("c13b0_chat_fab");
+  const panel = document.getElementById("c13b0_chat_panel");
+  const body = document.getElementById("c13b0_chat_body");
+  const input = document.getElementById("c13b0_chat_in");
+  const send = document.getElementById("c13b0_chat_send");
+  const close = document.getElementById("c13b0_chat_close");
+  const repoLabel = document.getElementById("c13b0_chat_repo");
+
+  const repo = (location.pathname.split("/")[1] || "").trim(); // for org pages it’s the repo root on pages
+  repoLabel.textContent = "repo: " + (repo || "(root)");
+
+  // Minimal styling decisions; avoid fighting your CSS
+  fab.style.background = "rgba(0,0,0,.82)";
+  fab.style.color = "white";
+  panel.style.background = "rgba(0,0,0,.90)";
+  panel.style.color = "white";
+  document.querySelector(".c13b0-chathead").style.borderBottom = "1px solid rgba(255,255,255,.10)";
+  input.style.background = "rgba(255,255,255,.06)";
+  input.style.color = "white";
+  send.style.background = "rgba(255,255,255,.14)";
+  send.style.color = "white";
+  close.style.background = "rgba(255,255,255,.14)";
+  close.style.color = "white";
+
+  function line(txt){
+    const div=document.createElement("div");
+    div.className="c13b0-chatline";
+    div.textContent=txt;
+    body.appendChild(div);
+    body.scrollTop = body.scrollHeight;
+  }
+
+  function open(){ panel.style.display="block"; input.focus(); }
+  function shut(){ panel.style.display="none"; }
+
+  fab.addEventListener("click", open);
+  close.addEventListener("click", shut);
+  window.addEventListener("click",(e)=>{
+    if(panel.style.display==="block"){
+      // click outside closes
+      if(!panel.contains(e.target) && e.target!==fab) shut();
+    }
+  });
+
+  async function ask(){
+    const q=(input.value||"").trim();
+    if(!q) return;
+
+    line("> " + q);
+    input.value="";
+
+    // Router endpoint (you’ll create it in your router repo)
+    // expected response: { ok:true, repo:"x", answer:"...", token:{id:"...", value:"...", type:"..."} }
+    try{
+      const res = await fetch("/router/ask", {
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({ repo, query:q, t: Date.now() })
+      });
+      const data = await res.json();
+      if(!data || !data.ok){
+        line("⚠️ Router error: " + (data && data.error ? data.error : "unknown"));
+        return;
+      }
+      if(data.answer) line(data.answer);
+      if(data.token){
+        line("🧱🟡🧱 TOKEN → " + JSON.stringify(data.token));
+      } else {
+        line("🧱📍🧱 no token returned");
+      }
+    }catch(err){
+      line("⚠️ fetch failed: " + err);
+    }
+  }
+
+  send.addEventListener("click", ask);
+  input.addEventListener("keydown",(e)=>{ if(e.key==="Enter") ask(); });
+})();
+</script>
+<!-- C13B0_CHAT_WIDGET_END -->
 </html>
+<!-- C14_TOKEN_PANEL_START -->
+<div style="font-family:monospace;background:#0b0f14;color:#e6edf3;padding:16px;margin:16px 0">
+  <div style="font-size:2.4em;color:#ffd700;text-align:center">
+    🧱🍄⭐ Token Value: 36
+  </div>
+
+  <p style="text-align:center">
+    🧱 Base &nbsp; 🍄 Growth &nbsp; ⭐ Star Power
+  </p>
+
+  <form action="https://www.paypal.com/cgi-bin/webscr" method="get" target="_blank">
+    <input type="hidden" name="cmd" value="_xclick">
+    <input type="hidden" name="business" value="watsonkris61@gmail.com">
+    <input type="hidden" name="item_name" value="Pi Token">
+    <input type="hidden" name="amount" value="36">
+    <input type="hidden" name="currency_code" value="USD">
+    <button style="width:100%;padding:14px;font-size:1em">
+      Pay $36 via PayPal
+    </button>
+  </form>
+
+  <p style="font-size:0.75em;text-align:center;margin-top:10px">
+    Repository owner: pewpi-infinity<br/>
+    Contact: marvaseater@gmail.com<br/>
+    Settlement handled externally via PayPal
+  </p>
+</div>
+<!-- C14_TOKEN_PANEL_END -->
+
+
+<!-- INDEX_VALUE_START -->
+<div class="box">
+<h2>🧱 Index License Token</h2>
+<p><strong>Operator:</strong> Kris Watson</p>
+<p><strong>License Value (monotonic):</strong> $112 USD</p>
+<p><small>Value increases daily via Infinity Plus + Mongoose growth.</small></p>
+<form action="https://www.paypal.com/paypalme/marvaseater@gmail.com/112" method="get" target="_blank">
+  <button type="submit">Buy License Token</button>
+</form>
+<p><small>Token grants right to display/use/operate this index for business. No ownership transfer.</small></p>
+<p><small>Contact: 808-342-9974</small></p>
+</div>
+<!-- INDEX_VALUE_END -->
+
+<!-- C13B0:MAP_VIEWER -->
+<section>
+  <h3>🧱🔗🧱 Infinity Ecosystem</h3>
+  <select onchange="location=this.value">
+    <!-- populated by bots -->
+  </select>
+</section>
+
+<!-- C13B0:PAYPAL_BLOCK -->
+<section>
+  <h3>🧱💰🧱 Acquire Access License</h3>
+  <p>Starting price shown below. Value increases with growth.</p>
+  <button>Buy Now (PayPal)</button>
+</section>
